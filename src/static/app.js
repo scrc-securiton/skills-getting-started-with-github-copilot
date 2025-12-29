@@ -20,11 +20,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Teilnehmerliste als hübsche, gestylte Liste
+        let participantsSection = "";
+        if (details.participants.length > 0) {
+          participantsSection = `
+            <div class="participants-section">
+              <strong>Teilnehmer:</strong>
+              <ul class="participants-list">
+                ${details.participants.map(p => `<li>${p}</li>`).join("")}
+              </ul>
+            </div>
+          `;
+        } else {
+          participantsSection = `
+            <div class="participants-section">
+              <em>Noch keine Teilnehmer</em>
+            </div>
+          `;
+        }
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsSection}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -35,6 +55,28 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = name;
         activitySelect.appendChild(option);
       });
+
+      // Zusätzliche Styles für die Teilnehmerliste
+      const style = document.createElement("style");
+      style.textContent = `
+        .participants-section {
+          margin-top: 10px;
+          background: #f7f7fa;
+          border-radius: 6px;
+          padding: 8px 12px;
+        }
+        .participants-list {
+          margin: 6px 0 0 0;
+          padding-left: 18px;
+        }
+        .participants-list li {
+          margin-bottom: 2px;
+          color: #333;
+          font-size: 0.97em;
+        }
+      `;
+      document.head.appendChild(style);
+
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
       console.error("Error fetching activities:", error);
